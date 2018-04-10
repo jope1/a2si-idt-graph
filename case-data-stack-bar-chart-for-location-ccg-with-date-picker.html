@@ -1,0 +1,424 @@
+<head>
+    <title>Cases Handled Split Into Disposition Broad Groups For a CCG</title>
+    <!-- Plotly.js -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <!-- JQuery -->
+    <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.5.1.min.js"></script>
+    <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.8.10/jquery-ui.min.js"></script>
+    <link href="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.8.10/themes/ui-lightness/jquery-ui.css" rel="stylesheet"
+          type="text/css"/>
+    <script>
+        $(document).ready(function () {
+            $("#fromDatepicker").datepicker({dateFormat: 'yy-M-dd'});
+            $("#toDatePicker").datepicker({dateFormat: 'yy-M-dd'});
+            //  $( "#ccg" ).selectmenu();
+        });
+    </script>
+</head>
+
+<body>
+<p>
+    From Date: <input id="fromDatepicker" type="text">
+    To Date: <input id="toDatePicker" type="text">
+
+    <select id="ccg">
+        <option>NHS Airedale, Wharfedale and Craven CCG</option>
+        <option>NHS Ashford CCG</option>
+        <option>NHS Aylesbury Vale CCG</option>
+        <option>NHS Barking and Dagenham CCG</option>
+        <option>NHS Barnet CCG</option>
+        <option>NHS Barnsley CCG</option>
+        <option>NHS Basildon and Brentwood CCG</option>
+        <option>NHS Bassetlaw CCG</option>
+        <option>NHS Bath and North East Somerset CCG</option>
+        <option>NHS Bedfordshire CCG</option>
+        <option>NHS Bexley CCG</option>
+        <option>NHS Birmingham CrossCity CCG</option>
+        <option>NHS Birmingham South and Central CCG</option>
+        <option>NHS Blackburn with Darwen CCG</option>
+        <option>NHS Blackpool CCG</option>
+        <option>NHS Bolton CCG</option>
+        <option>NHS Bracknell and Ascot CCG</option>
+        <option>NHS Bradford City CCG</option>
+        <option>NHS Bradford Districts CCG</option>
+        <option>NHS Brent CCG</option>
+        <option>NHS Brighton and Hove CCG</option>
+        <option>NHS Bristol CCG</option>
+        <option>NHS Bromley CCG</option>
+        <option>NHS Bury CCG</option>
+        <option>NHS Calderdale CCG</option>
+        <option>NHS Cambridgeshire and Peterborough CCG</option>
+        <option>NHS Camden CCG</option>
+        <option>NHS Cannock Chase CCG</option>
+        <option>NHS Canterbury and Coastal CCG</option>
+        <option>NHS Castle Point and Rochford CCG</option>
+        <option>NHS Central London (Westminster) CCG</option>
+        <option>NHS Chiltern CCG</option>
+        <option>NHS Chorley and South Ribble CCG</option>
+        <option>NHS City and Hackney CCG</option>
+        <option>NHS Coastal West Sussex CCG</option>
+        <option>NHS Corby CCG</option>
+        <option>NHS Coventry and Rugby CCG</option>
+        <option>NHS Crawley CCG</option>
+        <option>NHS Croydon CCG</option>
+        <option>NHS Darlington CCG</option>
+        <option>NHS Dartford, Gravesham and Swanley CCG</option>
+        <option>NHS Doncaster CCG</option>
+        <option>NHS Dorset CCG</option>
+        <option>NHS Dudley CCG</option>
+        <option>NHS Durham Dales, Easington and Sedgefie</option>
+        <option>NHS Ealing CCG</option>
+        <option>NHS East and North Hertfordshire CCG</option>
+        <option>NHS East Lancashire CCG</option>
+        <option>NHS East Leicestershire and Rutland CCG</option>
+        <option>NHS East Riding of Yorkshire CCG</option>
+        <option>NHS East Staffordshire CCG</option>
+        <option>NHS East Surrey CCG</option>
+        <option>NHS Eastbourne, Hailsham and Seaford CCG</option>
+        <option>NHS Eastern Cheshire CCG</option>
+        <option>NHS Enfield CCG</option>
+        <option>NHS Erewash CCG</option>
+        <option>NHS Fareham and Gosport CCG</option>
+        <option>NHS Fylde & Wyre CCG</option>
+        <option>NHS Gloucestershire CCG</option>
+        <option>NHS Great Yarmouth and Waveney CCG</option>
+        <option>NHS Greater Huddersfield CCG</option>
+        <option>NHS Greater Preston CCG</option>
+        <option>NHS Greenwich CCG</option>
+        <option>NHS Guildford and Waverley CCG</option>
+        <option>NHS Halton CCG</option>
+        <option>NHS Hambleton, Richmondshire and Whitby</option>
+        <option>NHS Hammersmith and Fulham CCG</option>
+        <option>NHS Hardwick CCG</option>
+        <option>NHS Haringey CCG</option>
+        <option>NHS Harrogate and Rural District CCG</option>
+        <option>NHS Harrow CCG</option>
+        <option>NHS Hartlepool and Stockton-on-Tees CCG</option>
+        <option>NHS Hastings and Rother CCG</option>
+        <option>NHS Havering CCG</option>
+        <option>NHS Herefordshire CCG</option>
+        <option>NHS Herts Valleys CCG</option>
+        <option>NHS Heywood, Middleton and Rochdale CCG</option>
+        <option>NHS High Weald Lewes Havens CCG</option>
+        <option>NHS Hillingdon CCG</option>
+        <option>NHS Horsham and Mid Sussex CCG</option>
+        <option>NHS Hounslow CCG</option>
+        <option>NHS Hull CCG</option>
+        <option>NHS Ipswich and East Suffolk CCG</option>
+        <option>NHS Isle of Wight CCG</option>
+        <option>NHS Islington CCG</option>
+        <option>NHS Kernow CCG</option>
+        <option>NHS Kingston CCG</option>
+        <option>NHS Knowsley CCG</option>
+        <option>NHS Lambeth CCG</option>
+        <option>NHS Leeds North CCG</option>
+        <option>NHS Leeds South and East CCG</option>
+        <option>NHS Leeds West CCG</option>
+        <option>NHS Leicester City CCG</option>
+        <option>NHS Lewisham CCG</option>
+        <option>NHS Lincolnshire East CCG</option>
+        <option>NHS Lincolnshire West CCG</option>
+        <option>NHS Liverpool CCG</option>
+        <option>NHS Luton CCG</option>
+        <option>NHS Manchester CCG</option>
+        <option>NHS Mansfield and Ashfield CCG</option>
+        <option>NHS Medway CCG</option>
+        <option>NHS Merton CCG</option>
+        <option>NHS Mid Essex CCG</option>
+        <option>NHS Milton Keynes CCG</option>
+        <option>NHS Morecambe Bay CCG</option>
+        <option>NHS Nene CCG</option>
+        <option>NHS Newark & Sherwood CCG</option>
+        <option>NHS Newbury and District CCG</option>
+        <option>NHS Newcastle Gateshead CCG</option>
+        <option>NHS Newham CCG</option>
+        <option>NHS North & West Reading CCG</option>
+        <option>NHS North Cumbria CCG</option>
+        <option>NHS North Derbyshire CCG</option>
+        <option>NHS North Durham CCG</option>
+        <option>NHS North East Essex CCG</option>
+        <option>NHS North East Hampshire and Farnham CCG</option>
+        <option>NHS North East Lincolnshire CCG</option>
+        <option>NHS North Hampshire CCG</option>
+        <option>NHS North Kirklees CCG</option>
+        <option>NHS North Lincolnshire CCG</option>
+        <option>NHS North Norfolk CCG</option>
+        <option>NHS North Somerset CCG</option>
+        <option>NHS North Staffordshire CCG</option>
+        <option>NHS North Tyneside CCG</option>
+        <option>NHS North West Surrey CCG</option>
+        <option>NHS Northern, Eastern and Western Devon</option>
+        <option>NHS Northumberland CCG</option>
+        <option>NHS Norwich CCG</option>
+        <option>NHS Nottingham City CCG</option>
+        <option>NHS Nottingham North and East CCG</option>
+        <option>NHS Nottingham West CCG</option>
+        <option>NHS Oldham CCG</option>
+        <option>NHS Oxfordshire CCG</option>
+        <option>NHS Portsmouth CCG</option>
+        <option>NHS Redbridge CCG</option>
+        <option>NHS Redditch and Bromsgrove CCG</option>
+        <option>NHS Richmond CCG</option>
+        <option>NHS Rotherham CCG</option>
+        <option>NHS Rushcliffe CCG</option>
+        <option>NHS Salford CCG</option>
+        <option>NHS Sandwell and West Birmingham CCG</option>
+        <option>NHS Scarborough and Ryedale CCG</option>
+        <option>NHS Sheffield CCG</option>
+        <option>NHS Shropshire CCG</option>
+        <option>NHS Slough CCG</option>
+        <option>NHS Solihull CCG</option>
+        <option>NHS Somerset CCG</option>
+        <option>NHS South Cheshire CCG</option>
+        <option>NHS South Devon and Torbay CCG</option>
+        <option>NHS South East Staffordshire and Seisdon
+        <option>NHS South Eastern Hampshire CCG</option>
+        <option>NHS South Gloucestershire CCG</option>
+        <option>NHS South Kent Coast CCG</option>
+        <option>NHS South Lincolnshire CCG</option>
+        <option>NHS South Norfolk CCG</option>
+        <option>NHS South Reading CCG</option>
+        <option>NHS South Sefton CCG</option>
+        <option>NHS South Tees CCG</option>
+        <option>NHS South Tyneside CCG</option>
+        <option>NHS South Warwickshire CCG</option>
+        <option>NHS South West Lincolnshire CCG</option>
+        <option>NHS South Worcestershire CCG</option>
+        <option>NHS Southampton CCG</option>
+        <option>NHS Southend CCG</option>
+        <option>NHS Southern Derbyshire CCG</option>
+        <option>NHS Southport and Formby CCG</option>
+        <option>NHS Southwark CCG</option>
+        <option>NHS St Helens CCG</option>
+        <option>NHS Stafford and Surrounds CCG</option>
+        <option>NHS Stockport CCG</option>
+        <option>NHS Stoke on Trent CCG</option>
+        <option>NHS Sunderland CCG</option>
+        <option>NHS Surrey Downs CCG</option>
+        <option>NHS Surrey Heath CCG</option>
+        <option>NHS Sutton CCG</option>
+        <option>NHS Swale CCG</option>
+        <option>NHS Swindon CCG</option>
+        <option>NHS Tameside and Glossop CCG</option>
+        <option>NHS Telford and Wrekin CCG</option>
+        <option>NHS Thanet CCG</option>
+        <option>NHS Thurrock CCG</option>
+        <option>NHS Tower Hamlets CCG</option>
+        <option>NHS Trafford CCG</option>
+        <option>NHS Vale of York CCG</option>
+        <option>NHS Vale Royal CCG</option>
+        <option>NHS Wakefield CCG</option>
+        <option>NHS Walsall CCG</option>
+        <option>NHS Waltham Forest CCG</option>
+        <option>NHS Wandsworth CCG</option>
+        <option>NHS Warrington CCG</option>
+        <option>NHS Warwickshire North CCG</option>
+        <option>NHS West Cheshire CCG</option>
+        <option>NHS West Essex CCG</option>
+        <option>NHS West Hampshire CCG</option>
+        <option>NHS West Kent CCG</option>
+        <option>NHS West Lancashire CCG</option>
+        <option>NHS West Leicestershire CCG</option>
+        <option>NHS West London CCG</option>
+        <option>NHS West Norfolk CCG</option>
+        <option>NHS West Suffolk CCG</option>
+        <option>NHS Wigan Borough CCG</option>
+        <option>NHS Wiltshire CCG</option>
+        <option>NHS Windsor, Ascot and Maidenhead CCG</option>
+        <option>NHS Wirral CCG</option>
+        <option>NHS Wokingham CCG</option>
+        <option>NHS Wolverhampton CCG</option>
+        <option>NHS Wyre Forest CCG</option>
+    </select>
+</p>
+<div id="graphArea"><!-- Plotly chart will be drawn inside this DIV --></div>
+
+<script>
+
+    var newOrRefresh = 'new';
+
+    var fromDate = null;
+    var toDate = null;
+
+    // Loop through data building x axis as from and y axis as total
+    //
+    // First create the x-axis, which will always be time
+
+    function generate() {
+
+        fromDate = $("#fromDatepicker").datepicker("getDate");
+        toDate = $("#toDatePicker").datepicker("getDate");
+        var selectedLocationCCG = $("#ccg option:selected").text();
+
+        console.log('location CCG = ' + selectedLocationCCG + ' and fromDate = ' + fromDate + ' and toDate = ' + toDate);
+
+        if (fromDate != null && toDate != null && selectedLocationCCG != null) {
+
+            //fromDate.setSeconds(fromDate.getSeconds() + 900);
+
+            var fromDateString =
+                fromDate.getFullYear() + '-' +
+                ('0' + (fromDate.getMonth() + 1)).slice(-2) + '-' +
+                ('0' + fromDate.getDate()).slice(-2) + ' ' +
+                ('0' + fromDate.getHours()).slice(-2) + ':' +
+                ('0' + fromDate.getMinutes()).slice(-2) + ':' +
+                ('0' + fromDate.getSeconds()).slice(-2);
+
+            toDate.setSeconds(toDate.getSeconds() + 900);
+            toDate.setHours(23);
+            toDate.setMinutes(59);
+            toDate.setSeconds(59);
+
+            var toDateString =
+                toDate.getFullYear() + '-' +
+                ('0' + (toDate.getMonth() + 1)).slice(-2) + '-' +
+                ('0' + toDate.getDate()).slice(-2) + ' ' +
+                ('0' + toDate.getHours()).slice(-2) + ':' +
+                ('0' + toDate.getMinutes()).slice(-2) + ':' +
+                ('0' + toDate.getSeconds()).slice(-2);
+
+            // Create a map with each key the dispo group and the value an array of all objects for the dispo group value
+            var dispoGroupArrayMap = new Map();
+
+            // The get JSON is executed asynchronously so ALL components that depend on the result (i.e. all rendering) must be
+            // in the same block as the REST call otherwise the components could be rendered without having received the data
+            //         http://localhost:7070/idt-case-data//2016-03-02 00:00:00/2017-12-02 23:59:59
+
+            var restApiUrl = "";
+
+            if (selectedLocationCCG != null) {
+                restApiUrl = "http://localhost:7070/idt-case-data-for-location/" + fromDateString + "/" + toDateString + "/" + selectedLocationCCG;
+            } else {
+                restApiUrl = "http://localhost:7070/idt-case-data/" + fromDateString + "/" + toDateString;
+            }
+
+            console.log("restApiUrl = " + restApiUrl);
+
+            $.getJSON(restApiUrl, function (data) {
+
+                var xAxis = [];
+                var xAxisMap = new Map();
+                var dispoGroupArray;
+                var layoutTitle = 'Cases';
+                if (selectedLocationCCG != null) {
+                    layoutTitle = layoutTitle + " for Location CCG: " + selectedLocationCCG;
+                }
+                var done = false;
+                var date = new Date(fromDate);
+                var dateString;
+
+                // Create the X Axis using all the date intervals between the from and to dates inclusive
+                // This is independent of the actual data we get, we wish to plot the x-axis values even if we have
+                // no data to display for a particular time slice
+                while (!done) {
+
+                    dateString = date.getFullYear() + '-' + date.getMonth() + '-' + date.getDate() + ' ' +
+                        date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
+
+                    dateString =
+                        date.getFullYear() + '-' +
+                        ('0' + (date.getMonth() + 1)).slice(-2) + '-' +
+                        ('0' + date.getDate()).slice(-2) + ' ' +
+                        ('0' + date.getHours()).slice(-2) + ':' +
+                        ('0' + date.getMinutes()).slice(-2) + ':' +
+                        ('0' + date.getSeconds()).slice(-2);
+
+                    //console.log('Formatted Date String ' + dateString);
+
+                    if (dateString > toDateString) {
+                        done = true;
+                    }
+
+                    xAxisMap.set(dateString, dateString);
+
+                    xAxis.push(dateString);
+
+                    date.setMinutes(date.getMinutes() + 15);
+                }
+
+                $.each(data, function () {
+
+                    dispoGroupArray = dispoGroupArrayMap.get(this.dispoGroup);
+                    if (typeof dispoGroupArray === 'undefined') {
+                        dispoGroupArray = new Array();
+                        dispoGroupArrayMap.set(this.dispoGroup, dispoGroupArray);
+                    }
+
+                    dispoGroupArray.push(this);
+
+                });
+
+                // This loop is just console logging the gathered disposition information
+                ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                // dispoGroupArrayMap.forEach(function (items, key, mapObj) {
+                //
+                //
+                //     console.log("Values for Dispo Code: " + key);
+                //     console.log("******************************");
+                //     items.forEach(function (item) {
+                //         console.log("Dispo Info: = " + item.dispoGroup + "|" + item.from + "|" + item.to + "|" + item.total);
+                //     });
+                // });
+                ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+                // We have the y-axis which is the same for ALL dispo groups
+                // we need to  create objects holding the x-axis data for each dispo group
+
+                var traceObjects = [];
+                dispoGroupArrayMap.forEach(function (items, key) {
+                    //console.log("Adding Trace object for " + key);
+
+
+                    var uniqueYAxis = [];
+                    // Create Y-Axis for the Dispo Group
+                    items.forEach(function (item) {
+                        uniqueYAxis.push(item.total);
+                        //console.log("Dispo Info: = " + item.dispoGroup + "|" + item.from + "|" + item.to + "|" + item.total);
+                    });
+
+                    var trace = {
+                        x: xAxis,
+                        y: uniqueYAxis,
+                        name: key,
+                        type: 'bar'
+                    };
+
+                    traceObjects.push(trace);
+                });
+
+                var layout = {
+                    height: 900,
+                    width: 2000,
+                    title: layoutTitle,
+                    barmode: 'stack',
+                    showlegend: true,
+                    xaxis: {
+                        tickangle: -45
+                    },
+                    yaxis: {
+                        zeroline: true,
+                        gridwidth: 4
+                    },
+                    bargap: 0.10
+                };
+
+                if (newOrRefresh === 'new') {
+                    Plotly.newPlot('graphArea', traceObjects, layout);
+                    newOrRefresh = 'refresh';
+                } else {
+                    Plotly.newPlot('graphArea', traceObjects, layout);
+                }
+
+            });
+        }
+
+    }
+
+    // Draw the graph when first loaded and then set it to redraw every 5 seconds.
+    generate();
+    setInterval(generate, 20000);
+
+
+</script>
+
+</body>

@@ -1,0 +1,133 @@
+<head>
+    <title>Accepted Services from 111 Calls</title>
+    <!-- Plotly.js -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+    <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.5.1.min.js"></script>
+    <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.8.10/jquery-ui.min.js"></script>
+    <link href="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.8.10/themes/ui-lightness/jquery-ui.css" rel="stylesheet"
+          type="text/css"/>
+    <script>
+        $(document).ready(function () {
+            $("#fromDatepicker").datepicker({dateFormat: 'yy-M-dd'});
+            $("#toDatePicker").datepicker({dateFormat: 'yy-M-dd'});
+        });
+    </script>
+</head>
+
+<body>
+<p>
+    From Date: <input id="fromDatepicker" type="text">
+    To Date: <input id="toDatePicker" type="text">
+    Service Id: <input id="serviceIdTextField" type="text">
+    Auto Refresh: <input id="auto-refresh" type="checkbox">
+
+<div id="graphArea"><!-- Plotly chart will be drawn inside this DIV --></div>
+
+<script>
+
+    var newOrRefresh = 'new';
+
+    var fromDate = null;
+    var toDate = null;
+
+    // The get JSON is executed asynchronously so ALL components that depend on the result (i.e. all rendering) must be
+    // in the same block as the REST call otherwise the components could be rendered without having received the data
+
+    function generate() {
+
+        if (document.getElementById("auto-refresh").checked === false) {
+
+                fromDate = $("#fromDatepicker").datepicker("getDate");
+                toDate = $("#toDatePicker").datepicker("getDate");
+        }
+
+        var serviceId = $('#serviceIdTextField').val();
+
+        console.log('Service Id = ' + serviceId + ' and fromDate = ' + fromDate + ' and toDate = ' + toDate);
+
+        if (fromDate != null && toDate != null && serviceId != null) {
+
+            fromDate.setMinutes(fromDate.getMinutes() + 60);
+
+            toDate.setMinutes(toDate.getMinutes() + 60);
+
+
+            var fromDateString =
+                fromDate.getFullYear() + '-' +
+                ('0' + (fromDate.getMonth() + 1)).slice(-2) + '-' +
+                ('0' + fromDate.getDate()).slice(-2) + ' ' +
+                ('0' + fromDate.getHours()).slice(-2) + ':' +
+                ('0' + fromDate.getMinutes()).slice(-2) + ':' +
+                ('0' + fromDate.getSeconds()).slice(-2);
+
+            toDate.setSeconds(toDate.getSeconds() + 900);
+            // toDate.setHours(23);
+            // toDate.setMinutes(59);
+            // toDate.setSeconds(59);
+
+            var toDateString =
+                toDate.getFullYear() + '-' +
+                ('0' + (toDate.getMonth() + 1)).slice(-2) + '-' +
+                ('0' + toDate.getDate()).slice(-2) + ' ' +
+                ('0' + toDate.getHours()).slice(-2) + ':' +
+                ('0' + toDate.getMinutes()).slice(-2) + ':' +
+                ('0' + toDate.getSeconds()).slice(-2);
+
+            var restApiUrl = "http://localhost:7060/idt-service-data-by-service-id/" + serviceId + "/" + fromDateString + "/" + toDateString;
+
+            console.log("restApiUrl = " + restApiUrl);
+
+            $.getJSON(restApiUrl, function (data) {
+
+                var xAxis = [];
+                var yAxis = [];
+                var layoutTitle = '';
+
+                $.each(data, function () {
+                    xAxis.push(this.from);
+                    yAxis.push(this.totalAccepted);
+                    layoutTitle = 'Service Id: ' + serviceId + ' Accepted Cases';
+                });
+
+                var graphData = {
+                    x: xAxis,
+                    y: yAxis,
+                    name: layoutTitle,
+                    type: 'bar'
+                };
+
+                var trace = [graphData];
+
+                var layout = {
+                    height: 900,
+                    width: 2000,
+                    title: layoutTitle,
+                    showlegend: false,
+                    xaxis: {
+                        tickangle: -45
+                    },
+                    yaxis: {
+                        zeroline: false,
+                        gridwidth: 2
+                    },
+                    bargap: 0.05
+                };
+
+                if (newOrRefresh === 'new') {
+                    Plotly.newPlot('graphArea', trace, layout);
+                    newOrRefresh = 'refresh';
+                } else {
+                    Plotly.newPlot('graphArea', trace, layout);
+                }
+            });
+        }
+    }
+
+    // Draw the graph when first loaded and then set it to redraw every 5 seconds.
+    generate();
+    setInterval(generate, 5000);
+
+</script>
+
+</body>

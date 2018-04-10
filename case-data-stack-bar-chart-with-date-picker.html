@@ -1,0 +1,202 @@
+<head>
+    <title>Cases Handled Split Into Disposition Broad Groups</title>
+    <!-- Plotly.js -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <!-- JQuery -->
+    <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.5.1.min.js"></script>
+    <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.8.10/jquery-ui.min.js"></script>
+    <link href="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.8.10/themes/ui-lightness/jquery-ui.css" rel="stylesheet"
+          type="text/css"/>
+    <script>
+        $(document).ready(function () {
+            $("#fromDatepicker").datepicker({dateFormat: 'yy-M-dd'});
+            $("#toDatePicker").datepicker({dateFormat: 'yy-M-dd'});
+        });
+    </script>
+</head>
+
+<body>
+<p>
+    From Date: <input id="fromDatepicker" type="text">
+    To Date: <input id="toDatePicker" type="text">
+
+</p>
+<div id="graphArea"><!-- Plotly chart will be drawn inside this DIV --></div>
+
+<script>
+
+    var newOrRefresh = 'new';
+
+    var fromDate = null;
+    var toDate = null;
+
+    // Loop through data building x axis as from and y axis as total
+    //
+    // First create the x-axis, which will always be time
+
+    function generate() {
+
+        fromDate = $("#fromDatepicker").datepicker("getDate");
+        toDate = $("#toDatePicker").datepicker("getDate");
+
+        console.log('fromDate = ' + fromDate + ' and toDate = ' + toDate);
+
+        if (fromDate != null && toDate != null) {
+
+            //fromDate.setSeconds(fromDate.getSeconds() + 900);
+
+            var fromDateString =
+                fromDate.getFullYear() + '-' +
+                ('0' + (fromDate.getMonth() + 1)).slice(-2) + '-' +
+                ('0' + fromDate.getDate()).slice(-2) + ' ' +
+                ('0' + fromDate.getHours()).slice(-2) + ':' +
+                ('0' + fromDate.getMinutes()).slice(-2) + ':' +
+                ('0' + fromDate.getSeconds()).slice(-2);
+
+            toDate.setSeconds(toDate.getSeconds() + 900);
+            toDate.setHours(23);
+            toDate.setMinutes(59);
+            toDate.setSeconds(59);
+
+            var toDateString =
+                toDate.getFullYear() + '-' +
+                ('0' + (toDate.getMonth() + 1)).slice(-2) + '-' +
+                ('0' + toDate.getDate()).slice(-2) + ' ' +
+                ('0' + toDate.getHours()).slice(-2) + ':' +
+                ('0' + toDate.getMinutes()).slice(-2) + ':' +
+                ('0' + toDate.getSeconds()).slice(-2);
+
+            // Create a map with each key the dispo group and the value an array of all objects for the dispo group value
+            var dispoGroupArrayMap = new Map();
+
+            // The get JSON is executed asynchronously so ALL components that depend on the result (i.e. all rendering) must be
+            // in the same block as the REST call otherwise the components could be rendered without having received the data
+            //         http://localhost:7070/idt-case-data//2016-03-02 00:00:00/2017-12-02 23:59:59
+
+            var restApiUrl = "http://localhost:7070/idt-case-data/" + fromDateString + "/" + toDateString;
+
+            console.log("restApiUrl = " + restApiUrl);
+
+            $.getJSON(restApiUrl, function (data) {
+
+                var xAxis = [];
+                var xAxisMap = new Map();
+                var dispoGroupArray;
+                var layoutTitle = 'Cases';
+                var done = false;
+                var date = new Date(fromDate);
+                var dateString;
+
+                // Create the X Axis using all the date intervals between the from and to dates inclusive
+                // This is independent of the actual data we get, we wish to plot the x-axis values even if we have
+                // no data to display for a particular time slice
+                while (!done) {
+
+                    dateString = date.getFullYear() + '-' + date.getMonth() + '-' + date.getDate() + ' ' +
+                        date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
+
+                    dateString =
+                        date.getFullYear() + '-' +
+                        ('0' + (date.getMonth() + 1)).slice(-2) + '-' +
+                        ('0' + date.getDate()).slice(-2) + ' ' +
+                        ('0' + date.getHours()).slice(-2) + ':' +
+                        ('0' + date.getMinutes()).slice(-2) + ':' +
+                        ('0' + date.getSeconds()).slice(-2);
+
+                    //console.log('Formatted Date String ' + dateString);
+
+                    if (dateString > toDateString) {
+                        done = true;
+                    }
+
+                    xAxisMap.set(dateString, dateString);
+
+                    xAxis.push(dateString);
+
+                    date.setMinutes(date.getMinutes() + 15);
+                }
+
+                $.each(data, function () {
+
+                    dispoGroupArray = dispoGroupArrayMap.get(this.dispoGroup);
+                    if (typeof dispoGroupArray === 'undefined') {
+                        dispoGroupArray = new Array();
+                        dispoGroupArrayMap.set(this.dispoGroup, dispoGroupArray);
+                    }
+
+                    dispoGroupArray.push(this);
+
+                });
+
+                // This loop is just console logging the gathered disposition information
+                ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                // dispoGroupArrayMap.forEach(function (items, key, mapObj) {
+                //
+                //
+                //     console.log("Values for Dispo Code: " + key);
+                //     console.log("******************************");
+                //     items.forEach(function (item) {
+                //         console.log("Dispo Info: = " + item.dispoGroup + "|" + item.from + "|" + item.to + "|" + item.total);
+                //     });
+                // });
+                ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+                // We have the y-axis which is the same for ALL dispo groups
+                // we need to  create objects holding the x-axis data for each dispo group
+
+                var traceObjects = [];
+                dispoGroupArrayMap.forEach(function (items, key) {
+                    //console.log("Adding Trace object for " + key);
+
+
+                    var uniqueYAxis = [];
+                    // Create Y-Axis for the Dispo Group
+                    items.forEach(function (item) {
+                        uniqueYAxis.push(item.total);
+                        //console.log("Dispo Info: = " + item.dispoGroup + "|" + item.from + "|" + item.to + "|" + item.total);
+                    });
+
+                    var trace = {
+                        x: xAxis,
+                        y: uniqueYAxis,
+                        name: key,
+                        type: 'bar'
+                    };
+
+                    traceObjects.push(trace);
+                });
+
+                var layout = {
+                    height: 900,
+                    width: 2000,
+                    title: layoutTitle,
+                    barmode: 'stack',
+                    showlegend: true,
+                    xaxis: {
+                        tickangle: -45
+                    },
+                    yaxis: {
+                        zeroline: true,
+                        gridwidth: 4
+                    },
+                    bargap: 0.10
+                };
+
+                if (newOrRefresh === 'new') {
+                    Plotly.newPlot('graphArea', traceObjects, layout);
+                    newOrRefresh = 'refresh';
+                } else {
+                    Plotly.newPlot('graphArea', traceObjects, layout);
+                }
+            });
+        }
+
+    }
+
+    // Draw the graph when first loaded and then set it to redraw every 5 seconds.
+    generate();
+    setInterval(generate, 20000);
+
+</script>
+
+</body>
